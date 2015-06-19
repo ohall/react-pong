@@ -1,0 +1,38 @@
+{
+  "name": "react-pong",
+  "version": "0.0.1",
+  "description": "A react ping pong game component",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ohall/react-pong.git"
+  },
+  "keywords": [
+    "react-component",
+    "react",
+    "ping",
+    "pong",
+    "game"
+  ],
+  "author": "Oakley Hall",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ohall/react-pong/issues"
+  },
+  "homepage": "https://github.com/ohall/react-pong",
+  "dependencies": {
+    "react": "^0.13.3"
+  },
+  "devDependencies": {
+    "babel": "^5.5.8",
+    "babelify": "^6.1.2",
+    "browserify": "^10.2.4",
+    "del": "^1.2.0",
+    "eslint": "^0.11.0-alpha.0",
+    "gulp": "^3.9.0",
+    "vinyl-source-stream": "^1.1.0"
+  }
+}
