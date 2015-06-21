@@ -16,7 +16,8 @@ export default React.createClass({
       upArrow: 38,
       downArrow: 40,
       paddleHeight: 100,
-      paddleWidth: 20
+      paddleWidth: 20,
+      ballSize: 20,
     }
   },
 
@@ -24,10 +25,9 @@ export default React.createClass({
     return {
       ballx: 100,
       bally: 100,
-      ballSize: 20,
-      ballSpeed: 12,
-      velx: 1,
-      vely: 1,
+      ballSpeed: 2,
+      velx: 0,
+      vely: 0,
       aix: 670,
       aiy: 100,
       playerx: 10,
@@ -44,6 +44,7 @@ export default React.createClass({
       delete keystate[evt.keyCode];
     });
     this._setupCanvas();
+    this._ball().serve(1);
   },
 
 
@@ -56,31 +57,102 @@ export default React.createClass({
   _setupCanvas: function() {
     this._canvas = this.getDOMNode();
     this._context = this._canvas.getContext('2d');
-    let xdir = 1;
-    let ydir = 1;
     setInterval( () => {
-      const x = this.state.ballx;
-      const y = this.state.bally;
-
-      if(x===690){ xdir=-1 }
-      if(x===10){ xdir=1 }
-      if(y===590){ ydir=-1 }
-      if(y===10){ ydir=1 }
-
-      this.setState({ ballx: this.state.ballx + 1 * xdir })
-      this.setState({ bally: this.state.bally + 1 * ydir })
       this._update();
       this._draw();
-    },10);
+    },60);
   },
 
   _ball() {
     const context = this._context;
     const state = this.state;
+    const props = this.props;
+    const player = this._player();
+    const ai = this._ai();
+    const that = this;
     return {
+      serve(side){
+        console.log( 'Serve!' );
+        // set the x and y position
+        const r = Math.random();
+        const phi = 0.1*pi*(1 - 2*r);
+        that.setState({
+          ballx: side === 1 ? state.playerx + props.paddleWidth : state.aix - props.ballSize,
+          bally: (props.height - props.ballSize) * r,
+          velx: props.ballSize * state.ballSpeed * Math.cos(phi) * side,
+          vely: state.ballSpeed * Math.sin(phi)
+        });
+        console.log( JSON.stringify(state, null, 2) );
+      },
+      update() {
+        // update position with current velocity
+        let bx = state.ballx;
+        let by = state.bally;
+        let vx = state.velx;
+        let vy = state.vely;
+
+        //console.log('bx ' + bx );
+        //console.log('by ' + by );
+        //console.log('vx ' + vx );
+        //console.log('vy ' + vy );
+
+        that.setState({
+          ballx: bx + vx,
+          bally: by + vy
+        });
+
+
+
+        // check if out of the canvas in the y direction
+        if (0 > by || by + props.ballSize > props.height) {
+
+          console.log( 'Booink! Y' );
+
+          // calculate and add the right offset, i.e. how far inside of the canvas the ball is
+          let offset = state.vely < 0 ? 0 - state.bally : props.height - (state.bally+props.ballSize);
+          that.setState({
+            bally: by + 2 * offset,
+            vely: vy * -1// mirror the y velocity
+          });
+        }
+
+        // check againts target paddle to check collision in x direction
+        let pdle = state.velx < 0 ? player : ai;
+
+        // helper function to check intesection between two axis aligned bounding boxex (AABB)
+        let AABBIntersect = (paddleX, paddleY, pWidth, pHeight, bx, by, bw, bh) => {
+          return paddleX < bx + bw &&
+                 paddleY < by + bh &&
+                 bx < paddleX + pWidth &&
+                 by < paddleY + pHeight;
+        };
+        if (AABBIntersect(pdle.position().x, pdle.position().y, props.paddleWidth, props.paddleHeight,
+            state.ballx, state.bally, props.ballSize, props.ballSize)) {
+
+          console.log( 'Booink! ' + pdle.name() );
+          let n = ( state.bally + props.ballSize - pdle.position().y )/( props.paddleHeight + props.ballSize );
+          let phi = 0.25 * pi * ( 2 * n - 1 ); // pi/4 = 45
+          let smash = Math.abs(phi) > 0.2 * pi ? 1.5 : 1;
+
+          that.setState({
+            ballx: pdle === player ?
+            state.playerx + props.paddleWidth : state.aix - props.ballSize,
+
+            velx: smash * ( pdle === player ? 1 : -1) * state.velx * Math.cos(phi),
+            vely: smash * state.vely * Math.sin(phi)
+          });
+          console.log( JSON.stringify(state, null, 2) );
+        }
+
+        // reset the ball when ball outside of the canvas in the
+        // x direction
+        if (0 > state.ballx + props.ballSize || state.ballx > props.width) {
+          this.serve( pdle.name() === player.name() ? 1 : -1);
+        }
+      },
       draw(){
         context.fillRect(state.ballx, state.bally,
-          state.ballSize, state.ballSize);
+          props.ballSize, props.ballSize);
       }
     };
   },
@@ -97,13 +169,11 @@ export default React.createClass({
       update() {
           py = state.playery;
           if (keystate[props.upArrow]){
-            py = state.playery - 7
-            console.log( py );
+            py = state.playery - 10;
             that.setState({playery: py});
           }
           if (keystate[props.downArrow]){
-            py = state.playery + 7
-            console.log( py );
+            py = state.playery + 10;
             that.setState({playery: py});
           }
         // keep the paddle inside of the canvas
@@ -114,6 +184,15 @@ export default React.createClass({
       draw(){
         context.fillRect(state.playerx, state.playery,
           props.paddleWidth, props.paddleHeight);
+      },
+      name(){
+        return 'player';
+      },
+      position(){
+        return{
+          x: state.playerx,
+          y: state.playery
+        }
       }
     };
   },
@@ -122,10 +201,28 @@ export default React.createClass({
     const context = this._context;
     const state = this.state;
     const props = this.props;
+    let that = this;
+    let py;
+
     return {
+      update: function() {
+        py = state.aiy
+        const desty = state.bally - (props.paddleHeight - props.ballSize)*0.5;
+        py = py + (desty - py) * 0.1
+        that.setState({aiy: py})
+      },
       draw(){
         context.fillRect( state.aix, state.aiy,
           props.paddleWidth, props.paddleHeight);
+      },
+      name(){
+        return 'ai';
+      },
+      position(){
+        return{
+          x: state.aix,
+          y: state.aiy
+        }
       }
     };
   },
@@ -158,6 +255,8 @@ export default React.createClass({
 
   _update(){
     this._player().update();
+    this._ai().update();
+    this._ball().update();
   },
 
   render() {
