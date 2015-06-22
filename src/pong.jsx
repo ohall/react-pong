@@ -1,7 +1,7 @@
 /**
  * Created by Oakley Hall on 6/19/15.
  */
-let React = require('react');
+const React = require('react');
 const pi = Math.PI;
 
 export default React.createClass({
@@ -36,7 +36,7 @@ export default React.createClass({
   },
 
   componentDidMount: function() {
-    let keystate = this._keystate;
+    const keystate = this._keystate;
     document.addEventListener('keydown', function(evt) {
       keystate[evt.keyCode] = true;
     });
@@ -72,7 +72,6 @@ export default React.createClass({
     const that = this;
     return {
       serve(side){
-        console.log( 'Serve!' );
         // set the x and y position
         const r = Math.random();
         const phi = 0.1*pi*(1 - 2*r);
@@ -82,34 +81,23 @@ export default React.createClass({
           velx: props.ballSize * state.ballSpeed * Math.cos(phi) * side,
           vely: state.ballSpeed * Math.sin(phi)
         });
-        console.log( JSON.stringify(state, null, 2) );
       },
       update() {
         // update position with current velocity
-        let bx = state.ballx;
-        let by = state.bally;
-        let vx = state.velx;
-        let vy = state.vely;
-
-        //console.log('bx ' + bx );
-        //console.log('by ' + by );
-        //console.log('vx ' + vx );
-        //console.log('vy ' + vy );
+        const bx = state.ballx;
+        const by = state.bally;
+        const vx = state.velx;
+        const vy = state.vely;
 
         that.setState({
           ballx: bx + vx,
           bally: by + vy
         });
-
-
-
+        
         // check if out of the canvas in the y direction
         if (0 > by || by + props.ballSize > props.height) {
-
-          console.log( 'Booink! Y' );
-
           // calculate and add the right offset, i.e. how far inside of the canvas the ball is
-          let offset = state.vely < 0 ? 0 - state.bally : props.height - (state.bally+props.ballSize);
+          const offset = state.vely < 0 ? 0 - state.bally : props.height - (state.bally+props.ballSize);
           that.setState({
             bally: by + 2 * offset,
             vely: vy * -1// mirror the y velocity
@@ -117,10 +105,10 @@ export default React.createClass({
         }
 
         // check againts target paddle to check collision in x direction
-        let pdle = state.velx < 0 ? player : ai;
+        const pdle = state.velx < 0 ? player : ai;
 
         // helper function to check intesection between two axis aligned bounding boxex (AABB)
-        let AABBIntersect = (paddleX, paddleY, pWidth, pHeight, bx, by, bw, bh) => {
+        const AABBIntersect = (paddleX, paddleY, pWidth, pHeight, bx, by, bw, bh) => {
           return paddleX < bx + bw &&
                  paddleY < by + bh &&
                  bx < paddleX + pWidth &&
@@ -129,23 +117,20 @@ export default React.createClass({
         if (AABBIntersect(pdle.position().x, pdle.position().y, props.paddleWidth, props.paddleHeight,
             state.ballx, state.bally, props.ballSize, props.ballSize)) {
 
-          console.log( 'Booink! ' + pdle.name() );
-          let n = ( state.bally + props.ballSize - pdle.position().y )/( props.paddleHeight + props.ballSize );
-          let phi = 0.25 * pi * ( 2 * n - 1 ); // pi/4 = 45
-          let smash = Math.abs(phi) > 0.2 * pi ? 1.5 : 1;
+          const n = ( state.bally + props.ballSize - pdle.position().y )/( props.paddleHeight + props.ballSize );
+          console.log( n );
+          const phi = 0.25 * pi * ( 2 * n - 1 ); // pi/4 = 45
+          const smash = Math.abs(phi) > 0.2 * pi ? 1.5 : 1;
 
           that.setState({
             ballx: pdle === player ?
             state.playerx + props.paddleWidth : state.aix - props.ballSize,
-
-            velx: smash * ( pdle === player ? 1 : -1) * state.velx * Math.cos(phi),
+            velx: smash * -1 * state.velx * Math.cos(phi),
             vely: smash * state.vely * Math.sin(phi)
           });
-          console.log( JSON.stringify(state, null, 2) );
         }
 
-        // reset the ball when ball outside of the canvas in the
-        // x direction
+        // x bound
         if (0 > state.ballx + props.ballSize || state.ballx > props.width) {
           this.serve( pdle.name() === player.name() ? 1 : -1);
         }
@@ -162,7 +147,7 @@ export default React.createClass({
     const state = this.state;
     const props = this.props;
     const keystate = this._keystate;
-    let that = this;
+    const that = this;
     let py;
 
     return {
@@ -201,7 +186,7 @@ export default React.createClass({
     const context = this._context;
     const state = this.state;
     const props = this.props;
-    let that = this;
+    const that = this;
     let py;
 
     return {
@@ -241,8 +226,8 @@ export default React.createClass({
     this._ai().draw();
 
     // draw the net
-    let w = 4;
-    let x = (this.props.width - w)*0.5;
+    const w = 4;
+    const x = (this.props.width - w)*0.5;
     let y = 0;
     const step = this.props.height/20; // how many net segments
     while (y < this.props.height) {
