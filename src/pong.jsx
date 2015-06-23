@@ -2,7 +2,6 @@
  * Created by Oakley Hall on 6/19/15.
  */
 const React = require('react');
-const pi = Math.PI;
 
 export default React.createClass({
   propTypes: {
@@ -36,15 +35,8 @@ export default React.createClass({
     }
   },
   componentDidMount: function() {
-    const keystate = this._keystate;
-    document.addEventListener('keydown', function(evt) {
-      keystate[evt.keyCode] = true;
-    });
-    document.addEventListener('keyup', function(evt) {
-      delete keystate[evt.keyCode];
-    });
     this._setupCanvas();
-    this._ball().serve(1);
+    this._stopGame();
   },
   _keystate: {},
   _canvas: undefined,
@@ -52,20 +44,32 @@ export default React.createClass({
   _ball: require('./ball'),
   _player: require('./player'),
   _ai: require('./ai'),
-  _loop: {},
+  _loop: null,
   _startGame() {
-    this._setupCanvas();
+    const keystate = this._keystate;
+    document.addEventListener('keydown', function(evt) {
+      keystate[evt.keyCode] = true;
+    });
+    document.addEventListener('keyup', function(evt) {
+      delete keystate[evt.keyCode];
+    });
+    this._loop = setInterval( () => {
+      this._update();
+      this._draw();
+    },1);
+    this._ball().serve(1);
   },
   _stopGame() {
+    this._loop = null;
+    this._context.font = '30px Arial';
+    this._context.fillText('Start Game',
+      this.props.width/2,
+      this.props.height/2 );
 
   },
   _setupCanvas: function() {
     this._canvas = this.getDOMNode();
     this._context = this._canvas.getContext('2d');
-    yjid._loop = setInterval( () => {
-      this._update();
-      this._draw();
-    },1);
   },
   _score(name) {
     const state = this.state;
@@ -81,7 +85,7 @@ export default React.createClass({
     this._context.save();
     this._context.fillStyle = "#fff";
 
-    this._context.font = '20px';
+    this._context.font = '10px Arial';
     this._context.fillText('Player: ' + state.playerScore , 10, 10 );
     this._context.fillText('CPU: ' + state.aiScore , 500, 10  );
 
@@ -109,6 +113,9 @@ export default React.createClass({
     this._ball().update();
   },
   render() {
-    return <canvas width={this.props.width} height={this.props.height}/>
+    return <canvas
+            onClick={this._startGame}
+            width={this.props.width}
+            height={this.props.height}/>
   }
 });

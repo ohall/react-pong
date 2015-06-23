@@ -3,6 +3,7 @@
  */
 
 module.exports = function(){
+  const pi = Math.PI;
   const context = this._context;
   const state = this.state;
   const props = this.props;
