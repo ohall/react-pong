@@ -23,7 +23,7 @@ export default React.createClass({
       paddleHeight: 100,
       paddleWidth: 20,
       paddleSpeed: 5,
-      ballSize: 20,
+      ballSize: 10,
     }
   },
   getInitialState(){

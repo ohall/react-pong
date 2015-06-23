@@ -26,7 +26,7 @@ default: 40
 #### ballSize: React.PropTypes.number
 Diameter of ball in pixels
 
-default: 20
+default: 10
 
 #### paddleHeight: React.PropTypes.number
 Height of both paddles in pixels

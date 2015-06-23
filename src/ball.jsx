@@ -15,7 +15,6 @@ module.exports = function(){
 
   return {
     serve(side){
-      // set the x and y position
       const phi = 0.1*pi*(1 - 2*r);
       that.setState({
         ballx: side === 1 ? state.playerx + props.paddleWidth : state.aix - props.ballSize,
@@ -25,7 +24,6 @@ module.exports = function(){
       });
     },
     update() {
-      // update position with current velocity
       const bx = state.ballx;
       const by = state.bally;
       const vx = state.velx;
@@ -40,7 +38,7 @@ module.exports = function(){
         const offset = state.vely < 0 ? 0 - state.bally : props.height - (state.bally+props.ballSize);
         that.setState({
           bally: by + 2 * offset,
-          vely: vy * -1// mirror the y velocity
+          vely: vy * -1
         });
       }
 
@@ -56,11 +54,9 @@ module.exports = function(){
           state.ballx, state.bally, props.ballSize, props.ballSize)) {
 
         const dir = state.velx < 0 ? 1 : -1;
-
-        // where along the pa
         const n = ( state.bally + props.ballSize - pdle.position().y )/( props.paddleHeight + props.ballSize );
-        const ydir = n > 0.5 ? -1 : 1;
-        const phi = (0.25 * pi) * ( 2 * n + dir ) + r; // pi/4 = 45
+        const ydir = ( n > 0.5 ? -1 : 1 ) * dir;
+        const phi = (0.25 * pi) * ( 2 * n + dir ) + r;
         const smash = Math.abs(phi) > 0.2 * pi ? 1.1 : 1;
 
         that.setState({
@@ -71,15 +67,18 @@ module.exports = function(){
         });
       }
 
-      // x bound
       if (0 > state.ballx + props.ballSize || state.ballx > props.width) {
         score(pdle.name());
         this.serve( pdle.name() === player.name() ? 1 : -1);
       }
     },
     draw(){
-      context.fillRect(state.ballx, state.bally,
-        props.ballSize, props.ballSize);
+      context.beginPath();
+      context.arc(state.ballx, state.bally, props.ballSize, 0, 2 * Math.PI);
+      context.fill();
+      context.lineWidth = 0;
+      context.strokeStyle = '#fff';
+      context.stroke();
     }
   };
 };
