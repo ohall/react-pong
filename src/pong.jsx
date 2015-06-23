@@ -36,7 +36,10 @@ export default React.createClass({
   },
   componentDidMount: function() {
     this._setupCanvas();
-    this._stopGame();
+    this._context.font = '30px Arial';
+    this._context.fillText('Start Game',
+      this.props.width/2,
+      this.props.height/2 );
   },
   _keystate: {},
   _canvas: undefined,
@@ -46,6 +49,11 @@ export default React.createClass({
   _ai: require('./ai'),
   _loop: null,
   _startGame() {
+
+    if(this._loop){
+      return;
+    }
+
     const keystate = this._keystate;
     document.addEventListener('keydown', function(evt) {
       keystate[evt.keyCode] = true;
@@ -60,11 +68,11 @@ export default React.createClass({
     this._ball().serve(1);
   },
   _stopGame() {
+    clearInterval(this._loop);
     this._loop = null;
-    this._context.font = '30px Arial';
-    this._context.fillText('Start Game',
-      this.props.width/2,
-      this.props.height/2 );
+    setTimeout(()=>{
+      this._context.clearRect(0, 0, this._canvas.width, this._canvas.height);
+    }, 0);
 
   },
   _setupCanvas: function() {
@@ -73,10 +81,23 @@ export default React.createClass({
   },
   _score(name) {
     const state = this.state;
-    const scorer = {player: 'aiScore', ai: 'playerScore'}[name];
+    const scorer = {player: 'ai', ai: 'player'}[name];
     this.setState({
-      [scorer]: state[scorer] + 1
+      [scorer+'Score']: state[scorer+'Score'] + 1
     });
+    this._stopGame();
+    setTimeout(()=>{
+      this._context.font = '30px Arial';
+      this._context.fillText(scorer + ' score!',
+        this.props.width/2,
+        this.props.height/2 );
+      this._context.restore();
+    }, 0);
+
+    setTimeout(()=>{
+      this._setupCanvas();
+      this._startGame();
+    }, 1000);
   },
   _draw() {
     // draw background
@@ -85,6 +106,7 @@ export default React.createClass({
     this._context.save();
     this._context.fillStyle = "#fff";
 
+    // draw scoreboard
     this._context.font = '10px Arial';
     this._context.fillText('Player: ' + state.playerScore , 10, 10 );
     this._context.fillText('CPU: ' + state.aiScore , 500, 10  );
