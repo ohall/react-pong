@@ -8,7 +8,6 @@ export default React.createClass({
   propTypes: {
 
   },
-
   getDefaultProps() {
     return {
       width: 700,
@@ -21,7 +20,6 @@ export default React.createClass({
       ballSize: 20,
     }
   },
-
   getInitialState(){
     return {
       ballx: 100,
@@ -37,7 +35,6 @@ export default React.createClass({
       aiScore: 0,
     }
   },
-
   componentDidMount: function() {
     const keystate = this._keystate;
     document.addEventListener('keydown', function(evt) {
@@ -49,173 +46,27 @@ export default React.createClass({
     this._setupCanvas();
     this._ball().serve(1);
   },
-
-
   _keystate: {},
-
   _canvas: undefined,
-
   _context: undefined,
+  _ball: require('./ball'),
+  _player: require('./player'),
+  _ai: require('./ai'),
+  _loop: {},
+  _startGame() {
+    this._setupCanvas();
+  },
+  _stopGame() {
 
+  },
   _setupCanvas: function() {
     this._canvas = this.getDOMNode();
     this._context = this._canvas.getContext('2d');
-    setInterval( () => {
+    yjid._loop = setInterval( () => {
       this._update();
       this._draw();
     },1);
   },
-
-  _ball() {
-    const context = this._context;
-    const state = this.state;
-    const props = this.props;
-    const player = this._player();
-    const score = this._score;
-    const ai = this._ai();
-    const that = this;
-    const r = Math.random();
-
-    return {
-      serve(side){
-        // set the x and y position
-        const phi = 0.1*pi*(1 - 2*r);
-        that.setState({
-          ballx: side === 1 ? state.playerx + props.paddleWidth : state.aix - props.ballSize,
-          bally: (props.height - props.ballSize) * r,
-          velx: state.ballSpeed * Math.cos(phi) * side,
-          vely: state.ballSpeed * Math.sin(phi)
-        });
-      },
-      update() {
-        // update position with current velocity
-        const bx = state.ballx;
-        const by = state.bally;
-        const vx = state.velx;
-        const vy = state.vely;
-        
-        that.setState({
-          ballx: bx + vx,
-          bally: by + vy
-        });
-        
-        if (0 > by || by + props.ballSize > props.height) {
-          const offset = state.vely < 0 ? 0 - state.bally : props.height - (state.bally+props.ballSize);
-          that.setState({
-            bally: by + 2 * offset,
-            vely: vy * -1// mirror the y velocity
-          });
-        }
-
-        const pdle = state.velx < 0 ? player : ai;
-
-        const AABBIntersect = (paddleX, paddleY, pWidth, pHeight, bx, by, bw, bh) => {
-          return paddleX < bx + bw &&
-                 paddleY < by + bh &&
-                 bx < paddleX + pWidth &&
-                 by < paddleY + pHeight;
-        };
-        if (AABBIntersect(pdle.position().x, pdle.position().y, props.paddleWidth, props.paddleHeight,
-            state.ballx, state.bally, props.ballSize, props.ballSize)) {
-
-          const dir = state.velx < 0 ? 1 : -1;
-
-          // where along the pa
-          const n = ( state.bally + props.ballSize - pdle.position().y )/( props.paddleHeight + props.ballSize );
-          const phi = (0.25 * pi) * ( 2 * n + dir ); // pi/4 = 45
-          const smash = Math.abs(phi) > 0.2 * pi ? 1.5 : 1;
-
-          that.setState({
-            ballx: pdle === player ?
-            state.playerx + props.paddleWidth : state.aix - props.ballSize,
-            velx: smash * -1 * state.velx,
-            vely: smash * state.velx * Math.sin(phi)
-          });
-        }
-
-        // x bound
-        if (0 > state.ballx + props.ballSize || state.ballx > props.width) {
-          score(pdle.name());
-          this.serve( pdle.name() === player.name() ? 1 : -1);
-        }
-      },
-      draw(){
-        context.fillRect(state.ballx, state.bally,
-          props.ballSize, props.ballSize);
-      }
-    };
-  },
-
-  _player() {
-    const context = this._context;
-    const state = this.state;
-    const props = this.props;
-    const keystate = this._keystate;
-    const that = this;
-    let py;
-
-    return {
-      update() {
-          py = state.playery;
-          if (keystate[props.upArrow]){
-            py = state.playery - props.paddleSpeed;
-            that.setState({playery: py});
-          }
-          if (keystate[props.downArrow]){
-            py = state.playery + props.paddleSpeed;
-            that.setState({playery: py});
-          }
-        // keep the paddle inside of the canvas
-        py = Math.max(Math.min(py, props.height - props.paddleHeight), 0);
-        that.setState({playery: py});
-
-      },
-      draw(){
-        context.fillRect(state.playerx, state.playery,
-          props.paddleWidth, props.paddleHeight);
-      },
-      name(){
-        return 'player';
-      },
-      position(){
-        return{
-          x: state.playerx,
-          y: state.playery
-        }
-      }
-    };
-  },
-
-  _ai() {
-    const context = this._context;
-    const state = this.state;
-    const props = this.props;
-    const that = this;
-    let py;
-
-    return {
-      update: function() {
-        py = state.aiy
-        const desty = state.bally - (props.paddleHeight - props.ballSize)*0.5;
-        py = py + (desty - py) * 0.1
-        that.setState({aiy: py})
-      },
-      draw(){
-        context.fillRect( state.aix, state.aiy,
-          props.paddleWidth, props.paddleHeight);
-      },
-      name(){
-        return 'ai';
-      },
-      position(){
-        return{
-          x: state.aix,
-          y: state.aiy
-        }
-      }
-    };
-  },
-
   _score(name) {
     const state = this.state;
     const scorer = {player: 'aiScore', ai: 'playerScore'}[name];
@@ -223,7 +74,6 @@ export default React.createClass({
       [scorer]: state[scorer] + 1
     });
   },
-
   _draw() {
     // draw background
     const state = this.state;
@@ -253,15 +103,12 @@ export default React.createClass({
 
     this._context.restore();
   },
-
   _update(){
     this._player().update();
     this._ai().update();
     this._ball().update();
   },
-
   render() {
     return <canvas width={this.props.width} height={this.props.height}/>
   }
-
 });
