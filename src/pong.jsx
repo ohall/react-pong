@@ -55,6 +55,15 @@ export default React.createClass({
   _player: require('./player'),
   _ai: require('./ai'),
   _loop: null,
+  _canvasStyle: {
+    display: 'block',
+    position: 'absolute',
+    margin: 'auto',
+    top: '0',
+    bottom: '0',
+    left: '0',
+    right: '0'
+  },
   _startGame() {
 
     if(this._loop){
@@ -143,6 +152,7 @@ export default React.createClass({
   },
   render() {
     return <canvas
+            style={this._canvasStyle}
             onClick={this._startGame}
             width={this.props.width}
             height={this.props.height}/>
