@@ -5,12 +5,19 @@ const React = require('react');
 
 export default React.createClass({
   propTypes: {
-
+    height: React.PropTypes.number,
+    width: React.PropTypes.number,
+    upArrow: React.PropTypes.number,
+    downArrow: React.PropTypes.number,
+    ballSize: React.PropTypes.number,
+    paddleHeight: React.PropTypes.number,
+    paddleWidth: React.PropTypes.number,
+    paddleSpeed: React.PropTypes.number,
   },
   getDefaultProps() {
     return {
-      width: 700,
       height: 600,
+      width: 700,
       upArrow: 38,
       downArrow: 40,
       paddleHeight: 100,
