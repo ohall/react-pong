@@ -11,6 +11,7 @@
     "global-strict": false
   },
   "globals": {
-    "require": false
+    "require": false,
+    "module": false
   }
 }
