@@ -1,0 +1,6 @@
+dist
+src
+node_modules
+gulpfile.js
+lib/testing.js
+lib/index.js
