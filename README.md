@@ -5,7 +5,22 @@ Inspired by [Max Wihlborg](https://github.com/maxwihlborg/youtube-tutorials)
 
 [See demo here](http://ohall.github.io/react-pong)
 
-### Props
+
+### Add to your project:
+```
+npm install --save react-pong
+```
+
+### Usage
+```
+const Pong = require('react-pong');
+
+React.render(
+  <Pong/>,
+  document.getElementById('container')
+);
+```
+### Properties/APi
 
 #### height: React.PropTypes.number
 Height of canvas element in px
