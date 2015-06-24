@@ -3,6 +3,8 @@ A simple ping-pong game in as a React component.
 
 Inspired by [Max Wihlborg](https://github.com/maxwihlborg/youtube-tutorials)
 
+[See demo here](http://ohall.github.io/react-pong)
+
 ### Props
 
 #### height: React.PropTypes.number
