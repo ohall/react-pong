@@ -44,6 +44,18 @@ gulp.task('app', function () {
   .pipe(gulp.dest('dist'));
 });
 
+gulp.task('pages', function () {
+  browserify({
+    entries: 'src/index.jsx',
+    extensions: ['.jsx'],
+    debug: true
+  })
+  .transform(babelify)
+  .bundle()
+  .pipe(source('bundle.js'))
+  .pipe(gulp.dest('.'));
+});
+
 gulp.task('watch', ['build'], function() {
   gulp.watch('src/**/*.*', ['build']);
 });
