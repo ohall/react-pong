@@ -48,4 +48,4 @@ gulp.task('watch', ['build'], function() {
   gulp.watch('src/**/*.*', ['build']);
 });
 
-gulp.task('default', ['build', 'assets']);
+gulp.task('default', ['watch']);
