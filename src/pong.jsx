@@ -41,6 +41,9 @@ export default React.createClass({
       aiScore: 0,
     }
   },
+  componentWillMount(){
+    React.initializeTouchEvents(true);
+  },
   componentDidMount: function() {
     this._setupCanvas();
     this._context.font = '30px Arial';
@@ -150,8 +153,14 @@ export default React.createClass({
     this._ai().update();
     this._ball().update();
   },
+  _touch(evt){
+    var yPos = evt.touches[0].pageY - evt.touches[0].target.offsetTop - this.props.paddleHeight/2;
+    this._player().position(yPos);
+  },
   render() {
     return <canvas
+            onTouchStart={this._touch}
+            onTouchMove={this._touch}
             style={this._canvasStyle}
             onClick={this._startGame}
             width={this.props.width}
