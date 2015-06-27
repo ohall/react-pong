@@ -47,9 +47,11 @@ export default React.createClass({
   componentDidMount: function() {
     this._setupCanvas();
     this._context.font = '30px Arial';
-    this._context.fillText('Start Game',
+    this._context.fillText('Starting Game',
       this.props.width/2,
       this.props.height/2 );
+
+    setTimeout(this._startGame, 1000);
   },
   _keystate: {},
   _canvas: undefined,
@@ -162,7 +164,6 @@ export default React.createClass({
             onTouchStart={this._touch}
             onTouchMove={this._touch}
             style={this._canvasStyle}
-            onClick={this._startGame}
             width={this.props.width}
             height={this.props.height}/>
   }
