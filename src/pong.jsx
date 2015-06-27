@@ -153,18 +153,14 @@ export default React.createClass({
     this._ai().update();
     this._ball().update();
   },
-  _touchStart(evt){
-    console.log( JSON.stringify( evt.touches, null, 2) );
-    var yPos = evt.originalEvent.touches[0].pageY;
-    this._player.setState({playery: yPos})
-  },
-  _touchMove(evt){
-    console.log( evt );
+  _touch(evt){
+    var yPos = evt.touches[0].pageY - evt.touches[0].target.offsetTop - this.props.paddleHeight/2;
+    this._player().position(yPos);
   },
   render() {
     return <canvas
-            onTouchStart={this._touchStart}
-            onTouchMove={this._touchMove}
+            onTouchStart={this._touch}
+            onTouchMove={this._touch}
             style={this._canvasStyle}
             onClick={this._startGame}
             width={this.props.width}

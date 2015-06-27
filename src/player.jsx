@@ -32,7 +32,8 @@ module.exports = function(){
     name(){
       return 'player';
     },
-    position(){
+    position(x){
+      if(y) { that.setState({playery: y}); }
       return{
         x: state.playerx,
         y: state.playery
