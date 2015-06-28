@@ -82,6 +82,9 @@ export default React.createClass({
     document.addEventListener('keyup', function(evt) {
       delete keystate[evt.keyCode];
     });
+    document.addEventListener('ontouchstart', function(e) {e.preventDefault()}, false);
+    document.addEventListener('ontouchmove', function(e) {e.preventDefault()}, false);
+
     this._loop = setInterval( () => {
       this._update();
       this._draw();
