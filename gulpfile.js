@@ -13,7 +13,7 @@ var del = require('del');
 gulp.task('build', ['clean', 'app', 'styles']);
 
 gulp.task('clean', function (cb) {
-  del([ 'dist/**/*/*'], cb);
+  del([ 'dist/bundle.js'], cb);
 });
 
 gulp.task('styles', function () {
