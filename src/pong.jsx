@@ -1,7 +1,8 @@
 /**
  * Created by Oakley Hall on 6/19/15.
  */
-const React = require('react');
+import React from 'react';
+import _ from 'lodash';
 
 export default React.createClass({
   propTypes: {
@@ -102,6 +103,10 @@ export default React.createClass({
   _setupCanvas: function() {
     this._canvas = this.getDOMNode();
     this._context = this._canvas.getContext('2d');
+
+    this._canvas.addEventListener('onTouchStart', e => { this._touch(e) }, false);
+    this._canvas.addEventListener('ontouchmove', e => { _.debounce(this._touch(e)) }, false);
+
   },
   _score(name) {
     const state = this.state;
@@ -164,8 +169,6 @@ export default React.createClass({
   },
   render() {
     return <canvas
-            onTouchStart={this._touch}
-            onTouchMove={this._touch}
             style={this._canvasStyle}
             width={this.props.width}
             height={this.props.height}/>
