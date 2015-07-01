@@ -160,11 +160,11 @@ export default React.createClass({
     this._ai().update();
     this._ball().update();
   },
-  _touch: _.debounce(evt => {
+  _touch(evt) {
     console.log( evt );
     var yPos = evt.touches[0].pageY - evt.touches[0].target.offsetTop - this.props.paddleHeight/2;
     this._player().position(yPos);
-  }, 100),
+  },
   render() {
     return <canvas
             onTouchStart={this._touch}
