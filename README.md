@@ -13,7 +13,7 @@ npm install --save react-pong
 
 ### Usage:
 ```
-const Pong = require('react-pong');
+import Pong from 'react-pong';
 
 React.render(
   <Pong/>,
