@@ -16,7 +16,8 @@ gulp.task('clean', function (cb) {
   del([ 'dist/bundle.js'], cb);
 });
 
-gulp.task('styles', function () {
+
+gulp.task('templates', function () {
   return gulp.src('src/styles/**/*.*')
   .pipe(gulp.dest('dist'));
 });
