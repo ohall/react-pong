@@ -1,7 +1,9 @@
 /**
  * Created by Oakley Hall on 6/19/15.
  */
-const React = require('react');
+
+import React from 'react';
+import _ from 'lodash';
 
 export default React.createClass({
   propTypes: {
@@ -158,10 +160,11 @@ export default React.createClass({
     this._ai().update();
     this._ball().update();
   },
-  _touch(evt){
+  _touch: _.debounce(evt => {
+    console.log( evt );
     var yPos = evt.touches[0].pageY - evt.touches[0].target.offsetTop - this.props.paddleHeight/2;
     this._player().position(yPos);
-  },
+  }, 100),
   render() {
     return <canvas
             onTouchStart={this._touch}

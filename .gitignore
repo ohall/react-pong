@@ -31,3 +31,6 @@ dist/
 
 #IDE
 .idea/
+
+#Publish
+publish.sh

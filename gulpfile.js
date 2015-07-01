@@ -10,14 +10,15 @@ var babel = require('gulp-babel');
 var source = require('vinyl-source-stream');
 var del = require('del');
 
-gulp.task('build', ['clean', 'app', 'styles']);
+gulp.task('build', ['clean', 'app', 'templates']);
 
 gulp.task('clean', function (cb) {
   del([ 'dist/bundle.js'], cb);
 });
 
-gulp.task('styles', function () {
-  return gulp.src('src/styles/**/*.*')
+
+gulp.task('templates', function () {
+  return gulp.src('templates/*.*')
   .pipe(gulp.dest('dist'));
 });
 
