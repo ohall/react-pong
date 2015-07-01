@@ -1,6 +1,7 @@
 /**
  * Created by Oakley Hall on 6/19/15.
  */
+
 import React from 'react';
 import _ from 'lodash';
 
@@ -103,10 +104,6 @@ export default React.createClass({
   _setupCanvas: function() {
     this._canvas = this.getDOMNode();
     this._context = this._canvas.getContext('2d');
-
-    this._canvas.addEventListener('onTouchStart', e => { this._touch(e) }, false);
-    this._canvas.addEventListener('ontouchmove', e => { _.debounce(this._touch(e)) }, false);
-
   },
   _score(name) {
     const state = this.state;
@@ -163,12 +160,15 @@ export default React.createClass({
     this._ai().update();
     this._ball().update();
   },
-  _touch(evt){
+  _touch: _.debounce(evt => {
+    console.log( evt );
     var yPos = evt.touches[0].pageY - evt.touches[0].target.offsetTop - this.props.paddleHeight/2;
     this._player().position(yPos);
-  },
+  }, 100),
   render() {
     return <canvas
+            onTouchStart={this._touch}
+            onTouchMove={this._touch}
             style={this._canvasStyle}
             width={this.props.width}
             height={this.props.height}/>
