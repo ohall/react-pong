@@ -1,6 +1,8 @@
 # react-pong
 A simple ping-pong game as a React component.
 
+![](http://i.imgur.com/tpm0k7u.gif)
+
 Inspired by [Max Wihlborg](https://github.com/maxwihlborg/youtube-tutorials)
 
 [See demo here](http://ohall.github.io/react-pong)
