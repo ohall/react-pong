@@ -133,9 +133,9 @@ export default React.createClass({
     this._context.fillStyle = "#fff";
 
     // draw scoreboard
-    this._context.font = '10px Arial';
-    this._context.fillText('Player: ' + state.playerScore , 10, 10 );
-    this._context.fillText('CPU: ' + state.aiScore , 500, 10  );
+    this._context.font = '30px Arial';
+    this._context.fillText('Player: ' + state.playerScore , 10, 30 );
+    this._context.fillText('AI: ' + state.aiScore , this.props.width - 100, 30  );
 
     //draw ball
     this._ball().draw();
