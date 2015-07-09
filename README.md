@@ -1,5 +1,5 @@
 # react-pong
-A simple ping-pong game as a React component.
+A simple ping-pong game as a React component composed in ES6.
 
 ![](http://i.imgur.com/tpm0k7u.gif)
 
