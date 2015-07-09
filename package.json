@@ -1,6 +1,6 @@
 {
   "name": "react-pong",
-  "version": "0.0.5",
+  "version": "1.0.0",
   "description": "A react ping pong game component",
   "main": "index.js",
   "scripts": {
