@@ -14,7 +14,7 @@ export default React.createClass({
     ballSize: React.PropTypes.number,
     paddleHeight: React.PropTypes.number,
     paddleWidth: React.PropTypes.number,
-    paddleSpeed: React.PropTypes.number,
+    paddleSpeed: React.PropTypes.number
   },
   getDefaultProps() {
     return {
@@ -25,7 +25,7 @@ export default React.createClass({
       paddleHeight: 100,
       paddleWidth: 20,
       paddleSpeed: 5,
-      ballSize: 10,
+      ballSize: 10
     }
   },
   getInitialState(){
@@ -40,11 +40,8 @@ export default React.createClass({
       playerx: 10,
       playery: 100,
       playerScore: 0,
-      aiScore: 0,
+      aiScore: 0
     }
-  },
-  componentWillMount(){
-    React.initializeTouchEvents(true);
   },
   componentDidMount: function() {
     this._setupCanvas();
