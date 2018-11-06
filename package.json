@@ -24,7 +24,7 @@
   },
   "homepage": "https://github.com/ohall/react-pong",
   "dependencies": {
-    "lodash": "^3.9.3",
+    "lodash": "^4.17.5",
     "react": "^0.14.6"
   },
   "devDependencies": {
